@@ -7,33 +7,28 @@ const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
-  // ✅ Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
     let total = 0;
     cart.forEach(item => {
-      const cost = parseFloat(item.cost.substring(1)); // remove $ sign
-      total += cost * item.quantity;
+      const numericCost = parseFloat(item.cost);
+      total += numericCost * item.quantity;
     });
-    return total.toFixed(2); // show 2 decimal places
+    return total.toFixed(2);
   };
 
-  // ✅ Continue shopping: return to plant list
   const handleContinueShopping = (e) => {
     e.preventDefault();
     onContinueShopping(e);
   };
 
-  // ✅ Checkout placeholder
-  const handleCheckoutShopping = (e) => {
+  const handleCheckoutShopping = () => {
     alert('Functionality to be added for future reference');
   };
 
-  // ✅ Increment item quantity
   const handleIncrement = (item) => {
     dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
   };
 
-  // ✅ Decrement item quantity or remove if 0
   const handleDecrement = (item) => {
     if (item.quantity > 1) {
       dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
@@ -42,15 +37,13 @@ const CartItem = ({ onContinueShopping }) => {
     }
   };
 
-  // ✅ Remove item from cart
   const handleRemove = (item) => {
     dispatch(removeItem(item.name));
   };
 
-  // ✅ Calculate subtotal for each item
   const calculateTotalCost = (item) => {
-    const cost = parseFloat(item.cost.substring(1));
-    return (cost * item.quantity).toFixed(2);
+    const numericCost = parseFloat(item.cost);
+    return (numericCost * item.quantity).toFixed(2);
   };
 
   return (
@@ -62,7 +55,7 @@ const CartItem = ({ onContinueShopping }) => {
             <img className="cart-item-image" src={item.image} alt={item.name} />
             <div className="cart-item-details">
               <div className="cart-item-name">{item.name}</div>
-              <div className="cart-item-cost">{item.cost}</div>
+              <div className="cart-item-cost">${item.cost}</div>
               <div className="cart-item-quantity">
                 <button className="cart-item-button cart-item-button-dec" onClick={() => handleDecrement(item)}>-</button>
                 <span className="cart-item-quantity-value">{item.quantity}</span>
@@ -74,6 +67,8 @@ const CartItem = ({ onContinueShopping }) => {
           </div>
         ))}
       </div>
+
+      <div style={{ marginTop: '20px', color: 'black' }} className='total_cart_amount'></div>
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={handleContinueShopping}>Continue Shopping</button>
         <br />
